@@ -1,5 +1,6 @@
 # prod
 dist/
+wrangler.toml
 
 # dev
 .yarn/
@@ -14,6 +15,8 @@ dist/
 # deps
 node_modules/
 .wrangler
+wrangler.toml
+
 
 # env
 .env
