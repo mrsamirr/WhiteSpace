@@ -11,6 +11,11 @@ export const bookRouter = new Hono<{
     }
 }>()
 
+
+  bookRouter.use('/*', async (c, next) => {
+    const response = verify(c.req.headers.auhtorization, c.env.JWT_SECRET)
+
+  })
   bookRouter.post('/', (c) => {
     return c.text('signin route')
   })
