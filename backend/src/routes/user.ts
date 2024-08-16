@@ -23,7 +23,9 @@ userRouter.post('/signup', async (c) => {
               password: body.password,
             }
         });
-        const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
+        const jwt = await sign({
+           id: user.id
+           }, c.env.JWT_SECRET);
         return c.json({ jwt });
   
     } catch(e) {
@@ -38,13 +40,13 @@ userRouter.post('/signup', async (c) => {
   
   
   userRouter.post('/signin', async (c) => {
-    // initialize prisma
+    const body = await c.req.json();
     const prisma = new PrismaClient({
       datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
 
-      const body = await c.req.json();
-      const user = await prisma.user.findUnique({
+    try {
+       const user = await prisma.user.findFirst({
          where: {
               email: body.email,
               password: body.password
@@ -58,6 +60,12 @@ userRouter.post('/signup', async (c) => {
 
       const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
       return c.json({ jwt });
-
+    } catch(e) {
+      console.log(e);
+      c.status(403);
+      return c.json({
+         error: "Incorrect Credentials"
+         });
+     }
   })
 
