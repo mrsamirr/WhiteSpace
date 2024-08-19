@@ -31,20 +31,21 @@ userRouter.post('/signup', async (c) => {
               name: body.name
             }
         });
-        const jwt = await sign({
-           id: user.id
-           }, c.env.JWT_SECRET);
-        return c.json({ jwt });
-  
-    } catch(e) {
-         c.status(403);
-         console.log(e)
-          return c.json(
-            { 
-              error: "error while signing up !" 
-            })
-      }
-  })
+
+        const token = await sign(
+      {
+        id: user.id,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+      },
+      c.env.JWT_SECRET
+    );
+    return c.json(token);
+  } catch (error) {
+    c.status(403);
+    return c.json({ err: 'Error Signing in.', error });
+  }
+
+  });
   
   
   userRouter.post('/signin', async (c) => {
@@ -59,7 +60,7 @@ userRouter.post('/signup', async (c) => {
     }).$extends(withAccelerate())
 
     try {
-       const user = await prisma.user.findFirst({
+       const user = await prisma.user.findUnique({
          where: {
               email: body.email,
               password: body.password
@@ -71,11 +72,12 @@ userRouter.post('/signup', async (c) => {
          return c.json({ error: "User Not Found" });
       }
 
-      const jwt = await sign({
-         id: user.id
-         }, c.env.JWT_SECRET);
+    const token = await sign(
+      { id: user.id, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+      c.env.JWT_SECRET
+    );
+    return c.json(token);
 
-      return c.json({ jwt });
     } catch(e) {
       console.log(e);
       c.status(403);
@@ -83,5 +85,5 @@ userRouter.post('/signup', async (c) => {
          error: "Incorrect Credentials"
          });
      }
-  })
+  });
 

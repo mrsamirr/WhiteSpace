@@ -8,7 +8,6 @@ interface BlogCardProps {
     
 }
 export const BlogCard = ({
-    id,
     authorName,
     title,
     content,
@@ -16,7 +15,7 @@ export const BlogCard = ({
 }: BlogCardProps) => {
     return <div className="p-4 border-b border-slate-200 pb-4">
         <div className="flex">
-                <Avatar name={authorName} />
+                <Avatar name={authorName} size={6}/>
             <div className="font-extralight pl-2 flex justify-center flex-col text-sm">{authorName}</div>
             <div className="flex justify-center flex-col pl-2">
                   <Circle />
@@ -44,7 +43,7 @@ function Circle() {
 
     </div>
 }
-export function Avatar({ name, size = 5 }: { name: string, size?: number }) {
+export function Avatar({ name, size = 6 }: { name: string, size?: number }) {
     return <div className={`relative inline-flex items-center justify-center w-${size} h-${size} overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600`}>
         <span className="font-sx font-extralight text-gray-600 dark:text-gray-300">{name[0]}</span>
     </div>

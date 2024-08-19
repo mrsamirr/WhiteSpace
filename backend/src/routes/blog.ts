@@ -15,27 +15,32 @@ export const blogRouter = new Hono<{
     }
 }>();
 
-  blogRouter.use( async (c, next) => {
-    const authHeader = c.req.header("authorization") || "";
+blogRouter.use('/*', async (c, next) => {
+  const authHeader = c.req.header('authorization') || '';
+   
+  const secret = c.env.JWT_SECRET;
   try {
-    const user = await verify(authHeader, c.env.JWT_SECRET);
+      const user = await verify(authHeader, secret);
 
-    if(user) {
-      c.set("userId", user.id as string);
-      await next();
-    } else {
+      if (user) {
+          c.set('userId', user.id);
+          await next();
+      } else {
+          c.status(403);
+          return c.json({
+              error: "Unauthorized"
+          });
+      }
+  } catch (e) {
+     console.log(e);
       c.status(403);
-      return c.json({ 
-        error: "You are not logged in"
+      return c.json({
+          message: "You are not logged in", e
       });
-    }
-  } catch(e) {
-    c.status(403);
-    return c.json({
-      error: "You are not logged in"
-    })
   }
-  });
+});
+
+
 
   blogRouter.post('/', async (c) => {
     const body = await c.req.json();
@@ -100,21 +105,31 @@ export const blogRouter = new Hono<{
     const prisma = new PrismaClient({
       datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
-    const posts = await prisma.post.findMany({
-      select: {
-          content: true,
-          title: true,
-          id: true,
-          author: {
-              select: {
-                  name: true
-              }
-          }
-      }
-  });
+
+    try{
+      
+      const posts = await prisma.post.findMany({
+        select: {
+            content: true,
+            title: true,
+            id: true,
+            author: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    });
     return c.json({
       posts
     })
+    } catch(e) {
+      c.status(411);
+      console.log(e);
+      return c.json({
+        error: "Error While fetching the Request"
+      });
+    }
   })
 
   blogRouter.get('/:id', async (c) => {

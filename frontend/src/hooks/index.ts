@@ -18,19 +18,28 @@ export const useBlogs = () => {
     const [blogs, setBlogs] = useState<Post[]>([]);
 
     useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
+        const token = localStorage.getItem("token");
+        console.log("Retrieved token:", token);
+
+            axios
+        .get(`${BACKEND_URL}/api/v1/blog/bulk`, {
             headers: {
-                Authorization: localStorage.getItem("token")
+            Authorization: localStorage.getItem('token'),
             },
         })
-            .then(response => {
-             setBlogs(response.data);
-                setLoading(false);
-            })
+        .then((response) => {
+            setBlogs(response.data.posts);
+            setLoading(false);
+        })
             .catch((error) => {
                 if (error.response.status === 403) {
                   // Redirect to login page if unauthorized
                 } else {
+                    console.log(error)
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                    console.log(error.request);
                   console.error('Failed to fetch blog:', error);
                   setLoading(false);
                 }
