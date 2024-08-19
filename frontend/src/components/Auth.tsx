@@ -6,23 +6,26 @@ import { BACKEND_URL } from "../config";
 
 
 export const Auth = ({type}: {type: "signup" | "signin"}) => { 
-    const navigate = useNavigate();
     const [postInputs, setPostInputs] = useState<SignupInput>({
         name: "",
         email: "",
         password: ""
     });
+    const navigate = useNavigate();
 
 
     async function sendRequest() {
     try {
-        const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`, postInputs);
-        const jwt = response.data;
-        localStorage.setItem("token", jwt);
+        const response = await axios.post(`${BACKEND_URL}/api/v1/user/${
+            type === 'signup' ? 'signup' : 'signin'}`,
+             postInputs
+            );
+      const jwt = response.data;
+        localStorage.setItem('token', JSON.stringify(jwt));
         navigate("/blogs");
     } catch(e) {
       //   alert the user here that the request failed 
-      alert("Error while signing up");
+      alert("Error while signing");
      }
     }
 
@@ -79,7 +82,7 @@ interface LabelledInputTypes {
 function LabelledInput({ label, placeholder, onchange, type }: LabelledInputTypes) {
     return  <div>
     <label className="block mb-2 text-sm font-bold text-black pt-4">{label}</label> 
-    <input onChange={onchange} type={ type || "text"} id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder={placeholder} required />
+    <input onChange={onchange} type={ type || "text"} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder={placeholder} required />
 </div>
 }
 
