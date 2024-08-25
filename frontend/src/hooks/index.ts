@@ -20,7 +20,6 @@ export const useBlog = ({ id }: { id: string }) => {
 
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
 
      axios
         .get(`${BACKEND_URL}/api/v1/blog/${id}`, {
