@@ -9,7 +9,7 @@ export const Appbar = () => {
             <img src={medium} />
         <div className="flex flex-col justify-center cursor-pointer font-bold text-3xl">
             <Link to={'/blogs'}>
-                Medium
+                White Space
             </Link>
         </div>
         <div>
