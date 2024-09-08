@@ -99,7 +99,7 @@ export const useLogout = () => {
    const navigate = useNavigate();
    const logout = () => {
     localStorage.removeItem('token');
-    navigate('/signup');
+    navigate('/');
    }
    return logout;
 }
