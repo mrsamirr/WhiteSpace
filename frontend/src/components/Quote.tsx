@@ -1,17 +1,17 @@
 import { FaLinkedin } from 'react-icons/fa';
 
 export const Quote = () => {
-    return <div className="bg-slate-200 h-screen flex justify-center flex-col">
+    return <div className="bg-gray-300 h-screen flex justify-center flex-col">
         <div className="flex justify-center">
             <div className="max-w-lg">
                 <div className="text-3xl font-bold">
-                    "The customer service I recieved was exceptional. The support team went above and beyond to address the concern"
+                "The level of service I experienced was remarkable. The support team truly went the extra mile to ensure my concerns were fully resolved."
                 </div>
                 <div className="max-w-md text-xl font-bold text-left mt-4">
-                    Jules Winnfield
+                Sarah Mitchell
                 </div>
                 <div className="max-w-md text-sm font-light text-slate-400">
-                    CEO, Acme Corp
+                CEO, Innovatech Solutions
                 </div>
                 <div className='max-w-lg text-2xl font-bold mt-4'>
                   Md Samer Ansari

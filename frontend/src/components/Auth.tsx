@@ -39,8 +39,8 @@ export const Auth = ({ type }: { type: 'signup' | 'signin' }) => {
                      {type === "signup" ? "Create an account" : "Login Your Account"}
                 </div>
                     <div className="text-slate-400">
-                        {type === "signin" ? "Don't have an account" : "Already have an account?"}
-                        <Link className="pl-2 underline" to={type === "signin" ? "/" : "/signin"}>
+                        {type === "signin" ? "Don't have an account?" : "Already have an account?"}
+                        <Link className="font-semibold underline text-black pl-1" to={type === "signin" ? "/" : "/signin"}>
                             {type === "signin" ? "Sign Up" : "Sign In"}
                         </Link> 
                     </div>
@@ -81,7 +81,8 @@ interface LabelledInputTypes {
 function LabelledInput({ label, placeholder, onchange, type }: LabelledInputTypes) {
     return  <div>
     <label className="block mb-2 text-sm font-bold text-black pt-4">{label}</label> 
-    <input onChange={onchange} type={ type || "text"} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder={placeholder} required />
+    <input onChange={onchange} type={ type || "text"} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5" placeholder={placeholder} required />
+    
 </div>
 }
 

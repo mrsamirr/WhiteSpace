@@ -5,35 +5,40 @@ import { useBlogs } from "../hooks"
 
 export const Blogs = () => {
     const { loading, blogs } = useBlogs();
+
     if (loading) {
-        return <div>
-                <Appbar />
-                <div className="flex justify-center p-4">
+        return (
             <div>
-                    <BlogSkeleton />
-                    <BlogSkeleton />
-                    <BlogSkeleton />
-                    <BlogSkeleton />
-                    <BlogSkeleton />
+                <Appbar />
+                <div className="mt-20 flex justify-center">
+                    <div className="max-w-2xl w-full">
+                        <BlogSkeleton />
+                        <BlogSkeleton />
+                        <BlogSkeleton />
+                        <BlogSkeleton />
+                        <BlogSkeleton />
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-    
+        );
 
-    return <div>
+    }
+    return <>
 
         <Appbar />
-        <div className="flex justify-between p-4">
-            <div>
-                {blogs.map(blog => <BlogCard
-                    id={blog.id}
-                    authorName={blog.author.name || "Anonymous"}
-                    title={blog.title}
-                    content={blog.content}
-                    publishedDate={"18 Aug 2024"}
-                />)}
+        <h1 className="flex justify-center border-b-1 text-2xl pt-3 font-extralight"> Discover Blogs</h1>
+        <div className="mt-3 mb-3 ml-[49rem] border max-w-xl"> </div>
+        <div className="flex justify-center">
+            <div className="max-w-2xl">
+                {blogs.map(blog =>
+                    <BlogCard
+                        id={blog.id}
+                        authorName={blog.author.name || "Anonymous"}
+                        title={blog.title}
+                        content={blog.content}
+                        publishedDate={"18 Aug 2024"}
+                    />)}
             </div>
         </div>
-    </div>
+    </>
 }
