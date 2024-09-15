@@ -1,11 +1,9 @@
 import { Link, useNavigate } from "react-router-dom"
 import { Avatar } from "./BlogCard"
 import medium from "./../assets/medium-icon-svgrepo-com.svg"
-import { useLogout } from "../hooks"
 
 export const Appbar = () => {
     const navigate = useNavigate();
-    const logout = useLogout();
     return <div className="border-b flex justify-between px-10 py-3">
         <img src={medium} />
         <div className="flex flex-col justify-center cursor-pointer font-bold text-3xl">
