@@ -14,18 +14,96 @@ datasource db {
 }
 
 model User {
-  id       Int   @id @default(autoincrement())
-  email    String   @unique
-  name     String?
-  password String
-  posts    Post[]
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  name        String?
+  password    String?  // Optional for OAuth users
+  bio         String?
+  avatar      String?
+  username    String?  @unique
+  website     String?
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // OAuth fields
+  googleId    String?  @unique
+  oauthProvider String? // "google", "email", etc.
+  
+  posts       Post[]
+  comments    Comment[]
+  likes       Like[]
+  followers   Follows[] @relation("following")
+  following   Follows[] @relation("follower")
 }
 
 model Post {
-  id        Int   @id @default(autoincrement())
-  title     String 
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  excerpt     String?
+  coverImage  String?
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  readTime    Int?
+  viewCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    Int
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  tags        Tag[]
+  comments    Comment[]
+  likes       Like[]
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  color String?
+  posts Post[]
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
   content   String
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  parentId  Int?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+
+  @@unique([userId, postId])
+}
+
+model Follows {
+  followerId  Int
+  followingId Int
+  createdAt   DateTime @default(now())
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
 }
