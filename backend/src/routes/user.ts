@@ -23,6 +23,16 @@ userRouter.post('/signup', async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate())
     try{
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email: body.email }
+        });
+
+        if (existingUser) {
+            c.status(409);
+            return c.json({ error: "User with this email already exists" });
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(body.password, 10);
         
@@ -33,21 +43,32 @@ userRouter.post('/signup', async (c) => {
               name: body.name,
               username: body.username || body.name?.toLowerCase().replace(/\s+/g, ''),
               bio: body.bio,
-              avatar: body.avatar
+              avatar: body.avatar,
+              oauthProvider: 'email'
             }
         });
 
         const token = await sign(
       {
         id: user.id,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+        email: user.email,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days
       },
       c.env.JWT_SECRET
     );
-    return c.json(token);
+    return c.json({
+        token,
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            username: user.username
+        }
+    });
   } catch (error) {
     c.status(403);
-    return c.json({ err: 'Error Signing in.', error });
+    return c.json({ err: 'Error Signing up.', error });
   }
 
   });
@@ -76,6 +97,12 @@ userRouter.post('/signup', async (c) => {
          return c.json({ error: "User Not Found" });
       }
 
+      // Check if user has password (email auth user)
+      if (!user.password) {
+        c.status(403);
+        return c.json({ error: "This account was created with Google. Please sign in with Google." });
+      }
+
       // Verify password
       const validPassword = await bcrypt.compare(body.password, user.password);
       if (!validPassword) {
@@ -84,10 +111,23 @@ userRouter.post('/signup', async (c) => {
       }
 
     const token = await sign(
-      { id: user.id, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+      { 
+        id: user.id, 
+        email: user.email,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7 // 7 days
+      },
       c.env.JWT_SECRET
     );
-    return c.json(token);
+    return c.json({
+        token,
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            username: user.username
+        }
+    });
 
     } catch(e) {
       console.log(e);
@@ -121,6 +161,7 @@ userRouter.get('/profile', async (c) => {
         website: true,
         location: true,
         createdAt: true,
+        oauthProvider: true,
         _count: {
           select: {
             posts: true,
@@ -169,7 +210,8 @@ userRouter.put('/profile', async (c) => {
         avatar: true,
         website: true,
         location: true,
-        createdAt: true
+        createdAt: true,
+        oauthProvider: true
       }
     });
 

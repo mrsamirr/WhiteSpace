@@ -45,6 +45,7 @@ export interface User {
     "website"?: string;
     "location"?: string;
     "createdAt": string;
+    "oauthProvider"?: string;
     "_count"?: {
         "posts": number;
         "followers": number;
@@ -275,6 +276,7 @@ export const useLogout = () => {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         navigate('/');
     }
     return logout;

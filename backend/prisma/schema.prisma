@@ -17,7 +17,7 @@ model User {
   id          Int      @id @default(autoincrement())
   email       String   @unique
   name        String?
-  password    String
+  password    String?  // Optional for OAuth users
   bio         String?
   avatar      String?
   username    String?  @unique
@@ -25,6 +25,11 @@ model User {
   location    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  // OAuth fields
+  googleId    String?  @unique
+  oauthProvider String? // "google", "email", etc.
+  
   posts       Post[]
   comments    Comment[]
   likes       Like[]

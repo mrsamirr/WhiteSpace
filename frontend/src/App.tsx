@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import { Signup } from "./pages/Signup"
 import { Signin } from "./pages/Signin"
 import { Blog } from "./pages/Blog"
@@ -19,9 +20,12 @@ import Terms from "./pages/Terms"
 import TextToSpeech from "./pages/TextToSpeech"
 import NotFound from "./pages/NotFound"
 
+// Replace with your actual Google Client ID
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';
+
 function App() {
   return (
-    <>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <Routes>
           {/* Auth Routes */}
@@ -54,7 +58,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </GoogleOAuthProvider>
   )
 }
 
