@@ -10,7 +10,7 @@ const Navbar = () => {
     <header className="border-b border-black">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/" className="text-2xl font-serif font-bold text-gray-900">
-          Medium
+          WhiteSpace
         </Link>
         <nav className="hidden md:flex items-center space-x-6">
           <Link to="/our-story" className="text-sm text-gray-600 hover:text-gray-900">
@@ -25,7 +25,8 @@ const Navbar = () => {
           <Link to="/signin" className="text-sm text-gray-600 hover:text-gray-900">
             Sign in
           </Link>
-          <button className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 text-sm">
+          <button className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 text-sm"
+          onClick={() => window.location.href = "/home"}>
             Get started
           </button>
         </nav>

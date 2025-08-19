@@ -17,7 +17,8 @@ export default function Home() {
                         </p>
                         <p className="text-xl font-medium text-gray-700">A place to read, write, and deepen your understanding</p>
                         <div className="pt-4">
-                            <button className="rounded-full bg-gray-900 hover:bg-gray-800 text-white font-medium px-8 py-4 text-lg">
+                            <button className="rounded-full bg-gray-900 hover:bg-gray-800 text-white font-medium px-8 py-4 text-lg" 
+                            onClick={() => window.location.href = "/home"}>
                                 Start reading
                             </button>
                         </div>
